@@ -28,3 +28,11 @@ kubectx ${cluster_name}=gke_${project_id}_${region}_${cluster_name}
 kubectl --context=${cluster_name} create namespace whereami
 kubectl --context=${cluster_name} -n whereami apply -f app/
 ```
+
+### create ingress gateway deployment
+
+```
+kubectl --context=${cluster_name} create namespace asm-ingress
+kubectl --context=${cluster_name} label namespace asm-ingress istio-injection- istio.io/rev=asm-managed --overwrite
+kubectl --context=${cluster_name} -n asm-ingress apply -f ingress-gateway/
+```
