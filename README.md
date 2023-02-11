@@ -21,3 +21,10 @@ rename context
 ```
 kubectx ${cluster_name}=gke_${project_id}_${region}_${cluster_name}
 ```
+
+### create backend app
+
+```
+kubectl --context=${cluster_name} create namespace whereami
+kubectl --context=${cluster_name} -n whereami apply -f app/
+```
