@@ -105,7 +105,7 @@ gcloud --project=${project_id} container fleet memberships delete gke-us-west2
 
 get certbot installed
 ```
-brew install certbot
+brew install certbot # seems broken on Linux due to augeas issues
 ```
 
 sample create cluster
