@@ -8,6 +8,7 @@ replace with your values
 export region=us-central1
 export project_id=mc-e2m-01
 export cluster_name=proxy-and-app-01
+export cluster_name_2=proxy-and-app-02 # just for testing 
 export project_number=447024719410
 ```
 
@@ -110,4 +111,9 @@ brew install certbot
 sample create cluster
 ```
 gcloud beta container --project "${project_id}" clusters create "${cluster_name}" --region "${region}" --no-enable-basic-auth --cluster-version "1.25.5-gke.2000" --release-channel "regular" --machine-type "e2-standard-4" --image-type "COS_CONTAINERD" --disk-type "pd-balanced" --disk-size "100" --metadata disable-legacy-endpoints=true --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --max-pods-per-node "32" --num-nodes "1" --logging=SYSTEM,WORKLOAD --monitoring=SYSTEM --enable-ip-alias --network "projects/${project_id}/global/networks/default" --subnetwork "projects/${project_id}/regions/${region}/subnetworks/default" --no-enable-intra-node-visibility --default-max-pods-per-node "32" --enable-autoscaling --min-nodes "0" --max-nodes "3" --location-policy "BALANCED" --enable-dataplane-v2 --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing,GcePersistentDiskCsiDriver --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --labels mesh_id=proj-${project_number} --enable-managed-prometheus --workload-pool "${project_id}.svc.id.goog" --enable-shielded-nodes #--node-locations "${region}-a","${region}-b","${region}-f"
+```
+
+sample create cluster 2
+```
+gcloud beta container --project "${project_id}" clusters create "${cluster_name_2}" --region "${region}" --no-enable-basic-auth --cluster-version "1.25.5-gke.2000" --release-channel "regular" --machine-type "e2-standard-4" --image-type "COS_CONTAINERD" --disk-type "pd-balanced" --disk-size "100" --metadata disable-legacy-endpoints=true --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --max-pods-per-node "32" --num-nodes "1" --logging=SYSTEM,WORKLOAD --monitoring=SYSTEM --enable-ip-alias --network "projects/${project_id}/global/networks/default" --subnetwork "projects/${project_id}/regions/${region}/subnetworks/default" --no-enable-intra-node-visibility --default-max-pods-per-node "32" --enable-autoscaling --min-nodes "0" --max-nodes "3" --location-policy "BALANCED" --enable-dataplane-v2 --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing,GcePersistentDiskCsiDriver --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --labels mesh_id=proj-${project_number} --enable-managed-prometheus --workload-pool "${project_id}.svc.id.goog" --enable-shielded-nodes #--node-locations "${region}-a","${region}-b","${region}-f"
 ```
