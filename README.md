@@ -80,7 +80,7 @@ curl https://whereami.miguelmendoza.demo.altostrat.com
 
 ### notes / junk
 
-> ignore this if you're not me
+> ignore this if you're not me; they're just debugging notes that you don't need
 
 get control plane status for current kubecontext
 ```
