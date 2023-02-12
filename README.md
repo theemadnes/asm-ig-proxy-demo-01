@@ -7,7 +7,7 @@ replace with your values
 ```
 export region=us-central1
 export project_id=mc-e2m-01
-export cluster_name=proxy-and-app-02
+export cluster_name=proxy-and-app-01
 export project_number=447024719410
 ```
 
@@ -39,11 +39,52 @@ kubectl --context=${cluster_name} label namespace asm-ingress istio-injection- i
 kubectl --context=${cluster_name} -n asm-ingress apply -f ingress-gateway/
 ```
 
+### set up DNS
+> my DNS environment isn't working so Miguel has helpfully created a DNS record and cert in his own environment to get this working
+create public zone
+```
+gcloud dns --project=mc-e2m-01 managed-zones create alexmattson-demo --description="" --dns-name="alexmattson.demo.altostrat.com." --visibility="public" --dnssec-state="off"
+```
 
+registrar setup
+```
+ns-cloud-e1.googledomains.com.
+ns-cloud-e2.googledomains.com.
+ns-cloud-e3.googledomains.com.
+ns-cloud-e4.googledomains.com.
+```
+
+### add TLS cert to `asm-ingress` namespace
+> of course, you need to have created a TLS cert and private key; replace with your own values
+```
+kubectl --context=${cluster_name} create -n asm-ingress secret tls whereami-credential \
+  --key=tls-cert/private-key.pem \
+  --cert=tls-cert/certificate.pem
+```
+
+### create gateway resource
+```
+kubectl --context=${cluster_name} -n asm-ingress apply -f gateway/
+```
+
+### create virtualservice
+```
+kubectl --context=${cluster_name} -n whereami apply -f virtualservice/
+```
+
+### call the service via NLB + proxies
+```
+curl https://whereami.miguelmendoza.demo.altostrat.com
+```
 
 ### notes / junk
 
 > ignore this if you're not me
+
+get control plane status for current kubecontext
+```
+
+```
 
 get fleet membership(s)
 ```
@@ -59,4 +100,14 @@ also clean up other clusters
 ```
 gcloud --project=${project_id} container fleet memberships delete gke-us-central1 
 gcloud --project=${project_id} container fleet memberships delete gke-us-west2
+```
+
+get certbot installed
+```
+brew install certbot
+```
+
+sample create cluster
+```
+gcloud beta container --project "mc-e2m-01" clusters create "proxy-and-app-01" --region "us-central1" --no-enable-basic-auth --cluster-version "1.25.5-gke.2000" --release-channel "regular" --machine-type "e2-standard-4" --image-type "COS_CONTAINERD" --disk-type "pd-balanced" --disk-size "100" --metadata disable-legacy-endpoints=true --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --max-pods-per-node "32" --num-nodes "1" --logging=SYSTEM,WORKLOAD --monitoring=SYSTEM --enable-ip-alias --network "projects/mc-e2m-01/global/networks/default" --subnetwork "projects/mc-e2m-01/regions/us-central1/subnetworks/default" --no-enable-intra-node-visibility --default-max-pods-per-node "32" --enable-autoscaling --min-nodes "0" --max-nodes "3" --location-policy "BALANCED" --enable-dataplane-v2 --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing,GcePersistentDiskCsiDriver --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --labels mesh_id=proj-447024719410 --enable-managed-prometheus --workload-pool "mc-e2m-01.svc.id.goog" --enable-shielded-nodes --node-locations "us-central1-a","us-central1-b","us-central1-f"
 ```
