@@ -40,7 +40,7 @@ kubectl --context=${cluster_name} -n asm-ingress apply -f ingress-gateway/
 ```
 
 ### set up DNS
-> my DNS environment isn't working so Miguel has helpfully created a DNS record and cert in his own environment to get this working
+> my DNS environment isn't working so Miguel has helpfully created a DNS record and cert in his own environment to get this working; for now, ignore this section
 create public zone
 ```
 gcloud dns --project=mc-e2m-01 managed-zones create alexmattson-demo --description="" --dns-name="alexmattson.demo.altostrat.com." --visibility="public" --dnssec-state="off"
