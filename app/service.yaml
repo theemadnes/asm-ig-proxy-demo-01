@@ -28,6 +28,6 @@ spec:
     name: http # adding for Istio
   selector:
     app: whereami
-  type: LoadBalancer
+  type: ClusterIP
 # [END gke_k8s_service_service_whereami]
 ---
