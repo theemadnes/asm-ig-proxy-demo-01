@@ -83,7 +83,7 @@ curl https://whereami.miguelmendoza.demo.altostrat.com
 
 get control plane status for current kubecontext
 ```
-
+kubectl -n istio-system get controlplanerevision
 ```
 
 get fleet membership(s)
