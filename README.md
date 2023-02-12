@@ -24,6 +24,8 @@ rename context for simplicity
 kubectx ${cluster_name}=gke_${project_id}_${region}_${cluster_name}
 ```
 
+follow [these instructions](https://cloud.google.com/service-mesh/docs/managed/provision-managed-anthos-service-mesh#enable_the_fleet_feature) to get ASM w/ Managed Control Plane enabled
+
 ### create backend app
 
 ```
