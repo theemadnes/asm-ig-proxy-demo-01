@@ -197,6 +197,6 @@ kubectl --context=${cluster_name_2} -n whereami apply -f virtualservice/
 
 update DNS A record to include cluster2 svc ip
 ```
-gcloud dns --project=mc-e2m-01 record-sets update whereami.alexmattson.demo.altostrat.com. --type="A" --zone="alexmattson-demo" --rrdatas="$INGRESS_GATEWAY_SVC_IP,$INGRESS_GATEWAY_SVC_IP_2" --ttl="1"
+gcloud dns --project=${project_id} record-sets update whereami.alexmattson.demo.altostrat.com. --type="A" --zone="alexmattson-demo" --rrdatas="$INGRESS_GATEWAY_SVC_IP,$INGRESS_GATEWAY_SVC_IP_2" --ttl="1"
 gcloud dns --project=${project_id} record-sets create whereami-2.alexmattson.demo.altostrat.com. --zone="alexmattson-demo" --type="A" --ttl="1" --rrdatas=${INGRESS_GATEWAY_SVC_IP_2}
 ```
