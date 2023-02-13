@@ -10,6 +10,7 @@ export project_id=mc-e2m-01
 export cluster_name=proxy-and-app-01
 export cluster_name_2=proxy-and-app-02 # just for testing 
 export project_number=447024719410
+export your_ldap=alexmattson # replace w/ your google LDAP
 ```
 
 ### setup first GKE cluster and enable ASM MCP
@@ -46,12 +47,12 @@ kubectl --context=${cluster_name} -n asm-ingress apply -f ingress-gateway/
 > my DNS environment isn't working so Miguel has helpfully created a DNS record and cert in his own environment to get this working; for now, ignore this section
 create public zone
 ```
-gcloud dns --project=${project_id} managed-zones create alexmattson-demo --description="" --dns-name="alexmattson.demo.altostrat.com." --visibility="public" --dnssec-state="off"
+gcloud dns --project=${project_id} managed-zones create ${your_ldap}-demo --description="" --dns-name="${your_ldap}.demo.altostrat.com." --visibility="public" --dnssec-state="off"
 ```
 
 (internal) verify DNS delegation
 ```
-dig alexmattson.demo.altostrat.com NS +short
+dig ${your_ldap}.demo.altostrat.com NS +short
 ```
 
 get IP from ingress gateway LB service
@@ -63,8 +64,8 @@ INGRESS_GATEWAY_SVC_IP=$(kubectl --context=${cluster_name} get svc --namespace a
 create A record for `whereami` (using super low TTL for now)
 ```
 # create one for the main name and another for the individual cluster
-gcloud dns --project=${project_id} record-sets create whereami.alexmattson.demo.altostrat.com. --zone="alexmattson-demo" --type="A" --ttl="1" --rrdatas=${INGRESS_GATEWAY_SVC_IP}
-gcloud dns --project=${project_id} record-sets create whereami-1.alexmattson.demo.altostrat.com. --zone="alexmattson-demo" --type="A" --ttl="1" --rrdatas=${INGRESS_GATEWAY_SVC_IP}
+gcloud dns --project=${project_id} record-sets create whereami.${your_ldap}.demo.altostrat.com. --zone="${your_ldap}-demo" --type="A" --ttl="1" --rrdatas=${INGRESS_GATEWAY_SVC_IP}
+gcloud dns --project=${project_id} record-sets create whereami-1.${your_ldap}.demo.altostrat.com. --zone="${your_ldap}-demo" --type="A" --ttl="1" --rrdatas=${INGRESS_GATEWAY_SVC_IP}
 ```
 
 ### use cert-manager to create TLS cert to be used by ingress gateway
@@ -96,7 +97,7 @@ kubectl --context=${cluster_name} -n whereami apply -f virtualservice/
 ### call the service via NLB + proxies
 ```
 curl https://whereami.miguelmendoza.demo.altostrat.com # for miguel's demo environment
-curl https://whereami.alexmattson.demo.altostrat.com # for mine
+curl https://whereami.${your_ldap}.demo.altostrat.com # for mine
 ```
 
 ### notes / junk
@@ -143,7 +144,7 @@ gcloud beta container --project "${project_id}" clusters create "${cluster_name_
 
 verify DNS delegation
 ```
-dig alexmattson.demo.altostrat.com NS +short
+dig ${your_ldap}.demo.altostrat.com NS +short
 ```
 
 ### cluster 2 setup
@@ -197,6 +198,6 @@ kubectl --context=${cluster_name_2} -n whereami apply -f virtualservice/
 
 update DNS A record to include cluster2 svc ip
 ```
-gcloud dns --project=${project_id} record-sets update whereami.alexmattson.demo.altostrat.com. --type="A" --zone="alexmattson-demo" --rrdatas="$INGRESS_GATEWAY_SVC_IP,$INGRESS_GATEWAY_SVC_IP_2" --ttl="1"
-gcloud dns --project=${project_id} record-sets create whereami-2.alexmattson.demo.altostrat.com. --zone="alexmattson-demo" --type="A" --ttl="1" --rrdatas=${INGRESS_GATEWAY_SVC_IP_2}
+gcloud dns --project=${project_id} record-sets update whereami.${your_ldap}.demo.altostrat.com. --type="A" --zone="${your_ldap}-demo" --rrdatas="$INGRESS_GATEWAY_SVC_IP,$INGRESS_GATEWAY_SVC_IP_2" --ttl="1"
+gcloud dns --project=${project_id} record-sets create whereami-2.${your_ldap}.demo.altostrat.com. --zone="${your_ldap}-demo" --type="A" --ttl="1" --rrdatas=${INGRESS_GATEWAY_SVC_IP_2}
 ```
