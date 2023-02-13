@@ -72,12 +72,12 @@ kubectl --context=${cluster_name} apply -f https://github.com/cert-manager/cert-
 
 create issuer
 ```
-kubectl --context=${cluster_name} -n asm-ingress apply -f cert-manager/issuer-http01.yaml
+kubectl --context=${cluster_name} -n asm-ingress apply -f cert-manager/issuer-prod.yaml
 ```
 
 create certificate
 ```
-kubectl --context=${cluster_name} -n asm-ingress apply -f cert-manager/certificate-http01.yaml
+kubectl --context=${cluster_name} -n asm-ingress apply -f cert-manager/certificate-prod.yaml
 ```
 
 ### create gateway resource
@@ -92,7 +92,8 @@ kubectl --context=${cluster_name} -n whereami apply -f virtualservice/
 
 ### call the service via NLB + proxies
 ```
-curl https://whereami.miguelmendoza.demo.altostrat.com
+curl https://whereami.miguelmendoza.demo.altostrat.com # for miguel's demo environment
+curl https://whereami.alexmattson.demo.altostrat.com # for mine
 ```
 
 ### notes / junk

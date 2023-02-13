@@ -13,7 +13,7 @@ spec:
       protocol: HTTPS
     tls:
       mode: SIMPLE
-      credentialName: ingress-http01-cert
+      credentialName: ingress-prod-cert
     hosts:
     - whereami.alexmattson.demo.altostrat.com
   - port:
