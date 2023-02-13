@@ -7,6 +7,8 @@ spec:
   hosts:
   - whereami.miguelmendoza.demo.altostrat.com
   - whereami.alexmattson.demo.altostrat.com
+  - whereami-1.alexmattson.demo.altostrat.com
+  - whereami-2.alexmattson.demo.altostrat.com
   gateways:
   - asm-ingress/whereami-gateway
   http:

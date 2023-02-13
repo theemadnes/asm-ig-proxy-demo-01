@@ -10,5 +10,5 @@ spec:
     # The issuer created previously
     name: ingressgateway-prod-issuer
   dnsNames:
-  - whereami-1.alexmattson.demo.altostrat.com
+  - whereami-2.alexmattson.demo.altostrat.com
   - whereami.alexmattson.demo.altostrat.com # replace with your values
