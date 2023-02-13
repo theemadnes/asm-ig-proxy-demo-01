@@ -182,9 +182,9 @@ create certificate
 kubectl --context=${cluster_name_2} -n asm-ingress apply -f cert-manager/certificate-prod-2.yaml
 ```
 
-create sample TLS certs from miguel's environment
+create sample TLS certs from miguel's environment # nevermind, not needed for cluster 2
 ```
-kubectl --context=${cluster_name_2} create -n asm-ingress secret tls whereami-credential   --key=tls-cert/private-key.pem   --cert=tls-cert/certificate.pem
+#kubectl --context=${cluster_name_2} create -n asm-ingress secret tls whereami-credential   --key=tls-cert/private-key.pem   --cert=tls-cert/certificate.pem
 ```
 
 ```
