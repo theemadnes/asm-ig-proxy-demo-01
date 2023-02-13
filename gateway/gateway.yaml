@@ -16,8 +16,8 @@ spec:
       credentialName: ingress-prod-cert
     hosts:
     - whereami.alexmattson.demo.altostrat.com
-    - whereami-1.alexmattson.demo.altostrat.com
-    - whereami-2.alexmattson.demo.altostrat.com
+    - whereami-1.alexmattson.demo.altostrat.com # go directly to cluster 1
+    - whereami-2.alexmattson.demo.altostrat.com # go directly to cluster 2, if it exists
   - port:
       number: 443
       name: https-whereami
