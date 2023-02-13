@@ -64,8 +64,8 @@ INGRESS_GATEWAY_SVC_IP=$(kubectl --context=${cluster_name} get svc --namespace a
 create A record for `whereami` (using super low TTL for now)
 ```
 # create one for the main name and another for the individual cluster
-gcloud dns --project=${project_id} record-sets create whereami.${your_ldap}.demo.altostrat.com. --zone="${your_ldap}-demo" --type="A" --ttl="1" --rrdatas=${INGRESS_GATEWAY_SVC_IP}
-gcloud dns --project=${project_id} record-sets create whereami-1.${your_ldap}.demo.altostrat.com. --zone="${your_ldap}-demo" --type="A" --ttl="1" --rrdatas=${INGRESS_GATEWAY_SVC_IP}
+gcloud dns --project=${project_id} record-sets create whereami.${your_ldap}.demo.altostrat.com. --zone="${your_ldap}-demo" --type="A" --ttl="10" --rrdatas=${INGRESS_GATEWAY_SVC_IP}
+gcloud dns --project=${project_id} record-sets create whereami-1.${your_ldap}.demo.altostrat.com. --zone="${your_ldap}-demo" --type="A" --ttl="10" --rrdatas=${INGRESS_GATEWAY_SVC_IP}
 ```
 
 ### use cert-manager to create TLS cert to be used by ingress gateway
@@ -198,6 +198,6 @@ kubectl --context=${cluster_name_2} -n whereami apply -f virtualservice/
 
 update DNS A record to include cluster2 svc ip
 ```
-gcloud dns --project=${project_id} record-sets update whereami.${your_ldap}.demo.altostrat.com. --type="A" --zone="${your_ldap}-demo" --rrdatas="${INGRESS_GATEWAY_SVC_IP},${INGRESS_GATEWAY_SVC_IP_2}" --ttl="1"
-gcloud dns --project=${project_id} record-sets create whereami-2.${your_ldap}.demo.altostrat.com. --zone="${your_ldap}-demo" --type="A" --ttl="1" --rrdatas=${INGRESS_GATEWAY_SVC_IP_2}
+gcloud dns --project=${project_id} record-sets update whereami.${your_ldap}.demo.altostrat.com. --type="A" --zone="${your_ldap}-demo" --rrdatas="${INGRESS_GATEWAY_SVC_IP},${INGRESS_GATEWAY_SVC_IP_2}" --ttl="10"
+gcloud dns --project=${project_id} record-sets create whereami-2.${your_ldap}.demo.altostrat.com. --zone="${your_ldap}-demo" --type="A" --ttl="10" --rrdatas=${INGRESS_GATEWAY_SVC_IP_2}
 ```
