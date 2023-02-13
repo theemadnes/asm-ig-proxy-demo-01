@@ -9,6 +9,15 @@ spec:
   servers:
   - port:
       number: 443
+      name: https-whereami-am
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      credentialName: ingress-http01-cert
+    hosts:
+    - whereami.alexmattson.demo.altostrat.com
+  - port:
+      number: 443
       name: https-whereami
       protocol: HTTPS
     tls:
@@ -16,3 +25,9 @@ spec:
       credentialName: whereami-credential
     hosts:
     - whereami.miguelmendoza.demo.altostrat.com
+  - port:
+      number: 80
+      name: http-whereami
+      protocol: HTTP
+    hosts:
+    - whereami.alexmattson.demo.altostrat.com 

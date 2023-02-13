@@ -46,7 +46,7 @@ kubectl --context=${cluster_name} -n asm-ingress apply -f ingress-gateway/
 > my DNS environment isn't working so Miguel has helpfully created a DNS record and cert in his own environment to get this working; for now, ignore this section
 create public zone
 ```
-gcloud dns --project=mc-e2m-01 managed-zones create alexmattson-demo --description="" --dns-name="alexmattson.demo.altostrat.com." --visibility="public" --dnssec-state="off"
+gcloud dns --project=${project_id} managed-zones create alexmattson-demo --description="" --dns-name="alexmattson.demo.altostrat.com." --visibility="public" --dnssec-state="off"
 ```
 
 (internal) verify DNS delegation
@@ -61,15 +61,23 @@ INGRESS_GATEWAY_SVC_IP=$(kubectl --context=${cluster_name} get svc --namespace a
 
 create A record for `whereami` (using super low TTL for now)
 ```
-gcloud dns --project=mc-e2m-01 record-sets create whereami.alexmattson.demo.altostrat.com. --zone="alexmattson-demo" --type="A" --ttl="1" --rrdatas=${INGRESS_GATEWAY_SVC_IP}
+gcloud dns --project=${project_id} record-sets create whereami.alexmattson.demo.altostrat.com. --zone="alexmattson-demo" --type="A" --ttl="1" --rrdatas=${INGRESS_GATEWAY_SVC_IP}
 ```
 
-### add TLS cert to `asm-ingress` namespace
-> of course, you need to have created a TLS cert and private key; replace with your own values
+### use cert-manager to create TLS cert to be used by ingress gateway
+install cert-manager using https://cert-manager.io/docs/installation/kubectl/
 ```
-kubectl --context=${cluster_name} create -n asm-ingress secret tls whereami-credential \
-  --key=tls-cert/private-key.pem \
-  --cert=tls-cert/certificate.pem
+kubectl --context=${cluster_name} apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
+```
+
+create issuer
+```
+kubectl --context=${cluster_name} -n asm-ingress apply -f cert-manager/issuer-http01.yaml
+```
+
+create certificate
+```
+kubectl --context=${cluster_name} -n asm-ingress apply -f cert-manager/certificate-http01.yaml
 ```
 
 ### create gateway resource

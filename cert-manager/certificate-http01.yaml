@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ingress-http01-cert
+  namespace: asm-ingress
+spec:
+  secretName: ingress-http01-cert
+  commonName: whereami.alexmattson.demo.altostrat.com
+  issuerRef:
+    # The issuer created previously
+    name: ingressgateway-http01-issuer
+  dnsNames:
+  - whereami.alexmattson.demo.altostrat.com # replace with your values

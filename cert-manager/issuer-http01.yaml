@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: ingressgateway-http01-issuer
+  namespace: asm-ingress
+spec:
+  acme:
+    email: alexmattson@google.com
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      # Secret resource that will be used to store the account's private key.
+      name: acme-ingressgateway-issuer-http01-account-key
+    solvers:
+    - http01:
+        ingress:
+          class: istio
