@@ -174,6 +174,19 @@ gke-proxy-and-app-02-default-pool-da55e0bf-w574	 Ready	2.44 CPU	3.92 CPU	4.09 GB
 gke-proxy-and-app-02-proxy-pool-690733c0-3s1g	 Ready	479 mCPU	15.89 CPU	958.39 MB	61.49 GB	0 B	0 B	
 ```
 
+### apply testing deployments and remove regular deployments
+```
+kubectl --context=${cluster_name_2} -n asm-ingress apply -f testing-proxy-deployment/deployment.yaml
+kubectl --context=${cluster_name_2} -n whereami apply -f testing-app-deployment/deployment.yaml
+kubectl --context=${cluster_name_2} -n asm-ingress delete deployment istio-ingressgateway
+kubectl --context=${cluster_name_2} -n whereami delete deployment whereami
+```
+
+### hit the cluster 2 dedicated endpoint to make sure traffic's still working
+```
+curl https://whereami-2.${your_ldap}.demo.altostrat.com
+```
+
 ## notes / junk
 
 > ignore this if you're not me; they're just debugging notes that you don't need

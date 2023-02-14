@@ -15,9 +15,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: istio-ingressgateway-testing
+  name: istio-ingressgateway-test
 spec:
-  replicas: 10
+  replicas: 12
   selector:
     matchLabels:
       app: istio-ingressgateway
@@ -38,8 +38,16 @@ spec:
         resources:
           limits:
             cpu: 1000m
-            memory: 2048i
+            memory: 2048Mi
           requests:
             cpu: 1000m
-            memory: 2048i
+            memory: 2048Mi
+      tolerations:
+      - key: "tier"
+        operator: "Equal"
+        value: "proxy"
+        effect: "NoSchedule"
       serviceAccountName: istio-ingressgateway
+      nodeSelector:
+        cloud.google.com/gke-nodepool: "proxy-pool"
+      

@@ -19,9 +19,9 @@ kind: Deployment
 metadata:
   labels:
     app: whereami
-  name: whereami-testing
+  name: whereami-test
 spec:
-  replicas: 10
+  replicas: 12
   selector:
     matchLabels:
       app: whereami
@@ -32,6 +32,13 @@ spec:
         version: v1
     spec:
       serviceAccountName: whereami
+      nodeSelector:
+        cloud.google.com/gke-nodepool: app-pool
+      tolerations:
+      - key: tier
+        operator: Equal
+        value: app
+        effect: NoSchedule
       securityContext:
         fsGroup: 1000
         runAsGroup: 1000
@@ -50,10 +57,10 @@ spec:
         resources:
           limits:
             cpu: 1000m
-            memory: 2048i
+            memory: 2048Mi
           requests:
             cpu: 1000m
-            memory: 2048i
+            memory: 2048Mi
         ports:
           - name: http
             containerPort: 8080
