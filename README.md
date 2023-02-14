@@ -1,7 +1,7 @@
 # asm-ig-proxy-demo-01
 Example of using a subset of Anthos Service Mesh / Istio capabilities by doing TLS term at IG layer and proxying requests to backend service.
 
-### do some exports
+## do some exports
 
 replace with your values
 ```
@@ -13,7 +13,7 @@ export project_number=447024719410
 export your_ldap=alexmattson # replace w/ your google LDAP
 ```
 
-### setup first GKE cluster and enable ASM MCP
+## setup first GKE cluster and enable ASM MCP
 
 > cluster creation done in console, but make sure to add context for that cluster to your kubeconfig; at the bottom of this doc i have provided the sample `gcloud` commands used to create the clusters 
 ```
@@ -100,7 +100,7 @@ curl https://whereami.miguelmendoza.demo.altostrat.com # for miguel's demo envir
 curl https://whereami.${your_ldap}.demo.altostrat.com # for mine
 ```
 
-### cluster 2 setup
+## cluster 2 setup
 
 ```
 kubectx ${cluster_name_2}=gke_${project_id}_${region}_${cluster_name_2}
@@ -155,8 +155,10 @@ gcloud dns --project=${project_id} record-sets update whereami.${your_ldap}.demo
 gcloud dns --project=${project_id} record-sets create whereami-2.${your_ldap}.demo.altostrat.com. --zone="${your_ldap}-demo" --type="A" --ttl="10" --rrdatas=${INGRESS_GATEWAY_SVC_IP_2}
 ```
 
+## create dedicated node pool on cluster 2 for some basic testing
 
-### notes / junk
+
+## notes / junk
 
 > ignore this if you're not me; they're just debugging notes that you don't need
 
