@@ -21,7 +21,7 @@ metadata:
     app: whereami
   name: whereami-test
 spec:
-  replicas: 14
+  replicas: 15
   selector:
     matchLabels:
       app: whereami
@@ -53,12 +53,17 @@ spec:
               - all
           privileged: false
           readOnlyRootFilesystem: true
-        image: us-docker.pkg.dev/google-samples/containers/gke/whereami:v1.2.19
+        #image: us-docker.pkg.dev/google-samples/containers/gke/whereami:v1.2.19
+        image: mccutchen/go-httpbin
         resources:
           limits:
+            #cpu: 250m
+            #memory: 512Mi
             cpu: 1000m
             memory: 2048Mi
           requests:
+            #cpu: 250m
+            #memory: 512Mi
             cpu: 1000m
             memory: 2048Mi
         ports:
@@ -66,7 +71,8 @@ spec:
             containerPort: 8080
         livenessProbe:
           httpGet:
-              path: /healthz
+              #path: /healthz
+              path: /
               port: 8080
               scheme: HTTP
           initialDelaySeconds: 5
@@ -74,7 +80,8 @@ spec:
           timeoutSeconds: 5
         readinessProbe:
           httpGet:
-            path: /healthz
+            #path: /healthz
+            path: /
             port: 8080
             scheme: HTTP
           initialDelaySeconds: 5

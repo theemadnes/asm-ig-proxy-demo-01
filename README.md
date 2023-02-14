@@ -164,7 +164,8 @@ gcloud beta container --project ${project_id} node-pools create "proxy-pool" --c
 
 ### app tier
 ```
-gcloud beta container --project ${project_id} node-pools create "app-pool" --cluster ${cluster_name_2} --region ${region} --node-version "1.25.5-gke.2000" --machine-type "n2-standard-16" --image-type "COS_CONTAINERD" --disk-type "pd-balanced" --disk-size "100" --node-labels tier=app --metadata disable-legacy-endpoints=true --node-taints tier=app:NoSchedule --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --num-nodes "1" --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --max-pods-per-node "64" --node-locations "${region}-a"
+# increasing PPN density because of high whereami pod density requirements
+gcloud beta container --project ${project_id} node-pools create "app-pool" --cluster ${cluster_name_2} --region ${region} --node-version "1.25.5-gke.2000" --machine-type "n2-standard-16" --image-type "COS_CONTAINERD" --disk-type "pd-balanced" --disk-size "100" --node-labels tier=app --metadata disable-legacy-endpoints=true --node-taints tier=app:NoSchedule --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --num-nodes "1" --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --max-pods-per-node "110" --node-locations "${region}-a"
 ```
 
 available resources before scheduling anything:

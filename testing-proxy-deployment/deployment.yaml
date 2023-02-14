@@ -17,7 +17,7 @@ kind: Deployment
 metadata:
   name: istio-ingressgateway-test
 spec:
-  replicas: 14
+  replicas: 15
   selector:
     matchLabels:
       app: istio-ingressgateway
