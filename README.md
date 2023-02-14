@@ -187,6 +187,24 @@ kubectl --context=${cluster_name_2} -n whereami delete deployment whereami
 curl https://whereami-2.${your_ldap}.demo.altostrat.com
 ```
 
+### test traffic
+
+> omitting instructions for now but i just fired up an e2-standard-16 VM in GCE and SSHed to it and installed `hey` to do a simple test
+```
+curl https://hey-release.s3.us-east-2.amazonaws.com/hey_linux_amd64 --output ./hey
+chmod +x ./hey
+./hey -c 64 -n 100000 https://whereami-2.alexmattson.demo.altostrat.com
+```
+
+### clean up
+```
+kubectl --context=${cluster_name_2} -n asm-ingress apply -f ingress-gateway/deployment.yaml
+kubectl --context=${cluster_name_2} -n whereami apply -f app/deployment.yaml
+kubectl --context=${cluster_name_2} -n asm-ingress delete deployment istio-ingressgateway-test
+kubectl --context=${cluster_name_2} -n whereami delete deployment whereami-test
+```
+> now delete the testing node pools
+
 ## notes / junk
 
 > ignore this if you're not me; they're just debugging notes that you don't need

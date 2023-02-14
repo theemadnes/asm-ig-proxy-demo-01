@@ -21,7 +21,7 @@ metadata:
     app: whereami
   name: whereami-test
 spec:
-  replicas: 12
+  replicas: 14
   selector:
     matchLabels:
       app: whereami
