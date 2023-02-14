@@ -17,7 +17,7 @@ kind: Deployment
 metadata:
   name: istio-ingressgateway-test
 spec:
-  replicas: 15
+  replicas: 4 #15
   selector:
     matchLabels:
       app: istio-ingressgateway
@@ -37,11 +37,11 @@ spec:
         image: auto # The image will automatically update each time the pod starts.
         resources:
           limits:
-            cpu: 1000m
-            memory: 2048Mi
+            cpu: 3750m #1000m
+            memory: 8192Mi #2048Mi
           requests:
-            cpu: 1000m
-            memory: 2048Mi
+            cpu: 3750m #1000m
+            memory: 8192Mi #2048Mi
       tolerations:
       - key: "tier"
         operator: "Equal"
