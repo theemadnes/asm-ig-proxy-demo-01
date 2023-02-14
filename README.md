@@ -15,7 +15,7 @@ export your_ldap=alexmattson # replace w/ your google LDAP
 
 ### setup first GKE cluster and enable ASM MCP
 
-> cluster creation done in console, but make sure to add context for that cluster to your kubeconfig
+> cluster creation done in console, but make sure to add context for that cluster to your kubeconfig; at the bottom of this doc i have provided the sample `gcloud` commands used to create the clusters 
 ```
 gcloud container clusters get-credentials ${cluster_name} --region ${region} --project ${project_id}
 ```
@@ -100,53 +100,6 @@ curl https://whereami.miguelmendoza.demo.altostrat.com # for miguel's demo envir
 curl https://whereami.${your_ldap}.demo.altostrat.com # for mine
 ```
 
-### notes / junk
-
-> ignore this if you're not me; they're just debugging notes that you don't need
-
-get control plane status for current kubecontext
-```
-kubectl -n istio-system get controlplanerevision
-```
-
-get fleet membership(s)
-```
-gcloud --project=${project_id} container fleet memberships list 
-```
-
-clean up old fleet membership for `proxy-and-app-01`
-```
-gcloud --project=${project_id} container fleet memberships delete proxy-and-app-01-1 
-```
-
-also clean up other clusters
-```
-gcloud --project=${project_id} container fleet memberships delete gke-us-central1 
-gcloud --project=${project_id} container fleet memberships delete gke-us-west2
-```
-
-get certbot installed
-```
-brew install certbot # seems broken on Linux due to augeas issues
-```
-
-sample create cluster
-```
-gcloud beta container --project "${project_id}" clusters create "${cluster_name}" --region "${region}" --no-enable-basic-auth --cluster-version "1.25.5-gke.2000" --release-channel "regular" --machine-type "e2-standard-4" --image-type "COS_CONTAINERD" --disk-type "pd-balanced" --disk-size "100" --metadata disable-legacy-endpoints=true --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --max-pods-per-node "32" --num-nodes "1" --logging=SYSTEM,WORKLOAD --monitoring=SYSTEM --enable-ip-alias --network "projects/${project_id}/global/networks/default" --subnetwork "projects/${project_id}/regions/${region}/subnetworks/default" --no-enable-intra-node-visibility --default-max-pods-per-node "32" --enable-autoscaling --min-nodes "0" --max-nodes "3" --location-policy "BALANCED" --enable-dataplane-v2 --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing,GcePersistentDiskCsiDriver --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --labels mesh_id=proj-${project_number} --enable-managed-prometheus --workload-pool "${project_id}.svc.id.goog" --enable-shielded-nodes #--node-locations "${region}-a","${region}-b","${region}-f"
-```
-
-sample create cluster 2
-```
-gcloud beta container --project "${project_id}" clusters create "${cluster_name_2}" --region "${region}" --no-enable-basic-auth --cluster-version "1.25.5-gke.2000" --release-channel "regular" --machine-type "e2-standard-4" --image-type "COS_CONTAINERD" --disk-type "pd-balanced" --disk-size "100" --metadata disable-legacy-endpoints=true --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --max-pods-per-node "32" --num-nodes "1" --logging=SYSTEM,WORKLOAD --monitoring=SYSTEM --enable-ip-alias --network "projects/${project_id}/global/networks/default" --subnetwork "projects/${project_id}/regions/${region}/subnetworks/default" --no-enable-intra-node-visibility --default-max-pods-per-node "32" --enable-autoscaling --min-nodes "0" --max-nodes "3" --location-policy "BALANCED" --enable-dataplane-v2 --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing,GcePersistentDiskCsiDriver --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --labels mesh_id=proj-${project_number} --enable-managed-prometheus --workload-pool "${project_id}.svc.id.goog" --enable-shielded-nodes #--node-locations "${region}-a","${region}-b","${region}-f"
-```
-
-> after creating cluster 2, make sure to enable ASM via Fleet API
-
-verify DNS delegation
-```
-dig ${your_ldap}.demo.altostrat.com NS +short
-```
-
 ### cluster 2 setup
 
 ```
@@ -201,3 +154,52 @@ update DNS A record to include cluster2 svc ip
 gcloud dns --project=${project_id} record-sets update whereami.${your_ldap}.demo.altostrat.com. --type="A" --zone="${your_ldap}-demo" --rrdatas="${INGRESS_GATEWAY_SVC_IP},${INGRESS_GATEWAY_SVC_IP_2}" --ttl="10"
 gcloud dns --project=${project_id} record-sets create whereami-2.${your_ldap}.demo.altostrat.com. --zone="${your_ldap}-demo" --type="A" --ttl="10" --rrdatas=${INGRESS_GATEWAY_SVC_IP_2}
 ```
+
+
+### notes / junk
+
+> ignore this if you're not me; they're just debugging notes that you don't need
+
+get control plane status for current kubecontext
+```
+kubectl -n istio-system get controlplanerevision
+```
+
+get fleet membership(s)
+```
+gcloud --project=${project_id} container fleet memberships list 
+```
+
+clean up old fleet membership for `proxy-and-app-01`
+```
+gcloud --project=${project_id} container fleet memberships delete proxy-and-app-01-1 
+```
+
+also clean up other clusters
+```
+gcloud --project=${project_id} container fleet memberships delete gke-us-central1 
+gcloud --project=${project_id} container fleet memberships delete gke-us-west2
+```
+
+get certbot installed
+```
+brew install certbot # seems broken on Linux due to augeas issues
+```
+
+sample create cluster
+```
+gcloud beta container --project "${project_id}" clusters create "${cluster_name}" --region "${region}" --no-enable-basic-auth --cluster-version "1.25.5-gke.2000" --release-channel "regular" --machine-type "e2-standard-4" --image-type "COS_CONTAINERD" --disk-type "pd-balanced" --disk-size "100" --metadata disable-legacy-endpoints=true --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --max-pods-per-node "32" --num-nodes "1" --logging=SYSTEM,WORKLOAD --monitoring=SYSTEM --enable-ip-alias --network "projects/${project_id}/global/networks/default" --subnetwork "projects/${project_id}/regions/${region}/subnetworks/default" --no-enable-intra-node-visibility --default-max-pods-per-node "32" --enable-autoscaling --min-nodes "0" --max-nodes "3" --location-policy "BALANCED" --enable-dataplane-v2 --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing,GcePersistentDiskCsiDriver --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --labels mesh_id=proj-${project_number} --enable-managed-prometheus --workload-pool "${project_id}.svc.id.goog" --enable-shielded-nodes #--node-locations "${region}-a","${region}-b","${region}-f"
+```
+
+sample create cluster 2
+```
+gcloud beta container --project "${project_id}" clusters create "${cluster_name_2}" --region "${region}" --no-enable-basic-auth --cluster-version "1.25.5-gke.2000" --release-channel "regular" --machine-type "e2-standard-4" --image-type "COS_CONTAINERD" --disk-type "pd-balanced" --disk-size "100" --metadata disable-legacy-endpoints=true --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --max-pods-per-node "32" --num-nodes "1" --logging=SYSTEM,WORKLOAD --monitoring=SYSTEM --enable-ip-alias --network "projects/${project_id}/global/networks/default" --subnetwork "projects/${project_id}/regions/${region}/subnetworks/default" --no-enable-intra-node-visibility --default-max-pods-per-node "32" --enable-autoscaling --min-nodes "0" --max-nodes "3" --location-policy "BALANCED" --enable-dataplane-v2 --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing,GcePersistentDiskCsiDriver --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 0 --labels mesh_id=proj-${project_number} --enable-managed-prometheus --workload-pool "${project_id}.svc.id.goog" --enable-shielded-nodes #--node-locations "${region}-a","${region}-b","${region}-f"
+```
+
+> after creating cluster 2, make sure to enable ASM via Fleet API
+
+verify DNS delegation
+```
+dig ${your_ldap}.demo.altostrat.com NS +short
+```
+
