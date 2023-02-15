@@ -199,6 +199,7 @@ chmod +x ./hey
 
 testing with `-disable-keepalive`
 ```
+# this will reduce throughput by ~8x as every requests uses a new TCP connection
 ./hey -disable-keepalive -c 64 -n 10000000 https://whereami-2.alexmattson.demo.altostrat.com
 ```
 
